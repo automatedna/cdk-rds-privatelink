@@ -184,7 +184,7 @@ export class RdsPrivateLink extends Construct {
     this.nlbManagementLambda = new lambda.Function(this, 'nlbUpdateLambda', {
       code: lambda.Code.fromAsset(path.join(__dirname, '../handler/src')),
       handler: props.lambdaHandlerName ?? 'index.handler',
-      runtime: lambda.Runtime.PYTHON_3_9,
+      runtime: lambda.Runtime.PYTHON_3_8,
       role: this.nlbManagementLambdaRole,
     });
 

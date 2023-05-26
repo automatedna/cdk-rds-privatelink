@@ -513,7 +513,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "python3.9",
+        "Runtime": "python3.8",
       },
       "Type": "AWS::Lambda::Function",
     },
