@@ -1,17 +1,51 @@
-import { awscdk } from 'projen';
+import { awscdk, javascript } from 'projen';
 const project = new awscdk.AwsCdkConstructLibrary({
-  author: 'user',
-  authorAddress: 'user@domain.com',
-  cdkVersion: '2.1.0',
+  author: 'Brandon Miller',
+  authorAddress: 'devops@automatedna.com',
+  cdkVersion: '2.80.0',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.0.0',
-  name: 'cdk-mssql-rds-privatelink',
+  name: '@automatedna/cdk-rds-privatelink',
   projenrcTs: true,
-  repositoryUrl: 'https://github.com/user/cdk-mssql-rds-privatelink.git',
-
-  // deps: [],                /* Runtime dependencies of this module. */
-  // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],             /* Build dependencies for this module. */
-  // packageName: undefined,  /* The "name" in package.json. */
+  repositoryUrl: 'https://github.com/automatedna/cdk-rds-privatelink.git',
+  keywords: [
+    'cdk',
+    'aws-cdk',
+    'aws-cdk-construct',
+    'projen',
+    'aws-rds',
+    'aws-privatelink',
+  ],
+  depsUpgrade: true,
+  depsUpgradeOptions: {
+    workflowOptions: {
+      schedule: javascript.UpgradeDependenciesSchedule.WEEKLY,
+    },
+  },
+  githubOptions: {
+    pullRequestLintOptions: {
+      semanticTitle: true,
+      semanticTitleOptions: {
+        types: [
+          'chore',
+          'docs',
+          'feat',
+          'fix',
+          'ci',
+          'refactor',
+          'test',
+        ],
+      },
+    },
+  },
+  stale: false,
+  releaseToNpm: true,
+  release: true,
+  npmAccess: javascript.NpmAccess.PUBLIC,
+  docgen: true,
+  eslint: true,
+  gitignore: [
+    '**/.venv/**',
+  ],
 });
 project.synth();
