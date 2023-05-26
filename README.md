@@ -1,6 +1,6 @@
 # RDS PrivateLink Construct for AWS CDK
 
-[![build](https://github.com/automatedna/cdk-aws-cur/actions/workflows/build.yml/badge.svg)](https://github.com/automatedna/cdk-aws-cur/actions/workflows/build.yml)
+[![build](https://github.com/automatedna/cdk-rds-privatelink/actions/workflows/build.yml/badge.svg)](https://github.com/automatedna/cdk-rds-privatelink/actions/workflows/build.yml)
 
 ## Features
 
