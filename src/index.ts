@@ -157,7 +157,7 @@ export class RdsPrivateLink extends Construct {
 
     this.nlbManagementTopic = new sns.Topic(this, 'RdsFailureTopic', {});
 
-    props.db.onEvent('DatabaseFailureEvent', {
+    props.db.onEvent('rdsPrivateLinkDatabaseFailureEvent', {
       target: new targets.SnsTopic(this.nlbManagementTopic, {}),
       eventPattern: {
         detail: {
@@ -184,7 +184,7 @@ export class RdsPrivateLink extends Construct {
           Tags: this.tags.renderedTags,
         },
         service: 'EC2',
-        physicalResourceId: cr.PhysicalResourceId.of('PrivateLinkTagging'),
+        physicalResourceId: cr.PhysicalResourceId.of('rdsPrivateLinkTagging'),
       },
       policy: cr.AwsCustomResourcePolicy.fromSdkCalls({
         resources: [

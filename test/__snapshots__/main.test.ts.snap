@@ -222,56 +222,6 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       "Type": "AWS::RDS::DBInstance",
       "UpdateReplacePolicy": "Snapshot",
     },
-    "DBDatabaseFailureEventA1DFCABD": {
-      "Properties": {
-        "EventPattern": {
-          "detail": {
-            "EventCategories": [
-              "failover",
-              "failure",
-            ],
-          },
-          "resources": [
-            {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:",
-                  {
-                    "Ref": "AWS::Partition",
-                  },
-                  ":rds:",
-                  {
-                    "Ref": "AWS::Region",
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId",
-                  },
-                  ":db:",
-                  {
-                    "Ref": "DB4924F778",
-                  },
-                ],
-              ],
-            },
-          ],
-          "source": [
-            "aws.rds",
-          ],
-        },
-        "State": "ENABLED",
-        "Targets": [
-          {
-            "Arn": {
-              "Ref": "STACKNAMERdsFailureTopic5488D4DF",
-            },
-            "Id": "Target0",
-          },
-        ],
-      },
-      "Type": "AWS::Events::Rule",
-    },
     "DBSecretAttachment1CF7DE47": {
       "Properties": {
         "SecretId": {
@@ -338,6 +288,56 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       },
       "Type": "AWS::RDS::DBSubnetGroup",
     },
+    "DBrdsPrivateLinkDatabaseFailureEventBB45DBC0": {
+      "Properties": {
+        "EventPattern": {
+          "detail": {
+            "EventCategories": [
+              "failover",
+              "failure",
+            ],
+          },
+          "resources": [
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition",
+                  },
+                  ":rds:",
+                  {
+                    "Ref": "AWS::Region",
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId",
+                  },
+                  ":db:",
+                  {
+                    "Ref": "DB4924F778",
+                  },
+                ],
+              ],
+            },
+          ],
+          "source": [
+            "aws.rds",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Ref": "STACKNAMERdsFailureTopic5488D4DF",
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
     "STACKNAMEPrivateLinkTagging167DAB2F": {
       "DeletionPolicy": "Delete",
       "DependsOn": [
@@ -352,7 +352,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
               {
                 "Ref": "STACKNAMErdsPrivateLinkVpcEndpointServiceC5A8FCA0",
               },
-              ""]},"service":"EC2","physicalResourceId":{"id":"PrivateLinkTagging"}}",
+              ""]},"service":"EC2","physicalResourceId":{"id":"rdsPrivateLinkTagging"}}",
             ],
           ],
         },
@@ -371,7 +371,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
               {
                 "Ref": "STACKNAMErdsPrivateLinkVpcEndpointServiceC5A8FCA0",
               },
-              ""]},"service":"EC2","physicalResourceId":{"id":"PrivateLinkTagging"}}",
+              ""]},"service":"EC2","physicalResourceId":{"id":"rdsPrivateLinkTagging"}}",
             ],
           ],
         },
