@@ -852,6 +852,7 @@ const rdsPrivateLinkProps: RdsPrivateLinkProps = { ... }
 | <code><a href="#@automatedna/cdk-rds-privatelink.RdsPrivateLinkProps.property.vpcSubnets">vpcSubnets</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | The VPC subnets to create the endpoint in. |
 | <code><a href="#@automatedna/cdk-rds-privatelink.RdsPrivateLinkProps.property.acceptanceRequired">acceptanceRequired</a></code> | <code>boolean</code> | Whether requests from the service consumers to connect to the service through an endpoint must be accepted. |
 | <code><a href="#@automatedna/cdk-rds-privatelink.RdsPrivateLinkProps.property.allowedPrincipals">allowedPrincipals</a></code> | <code>aws-cdk-lib.aws_iam.ArnPrincipal[]</code> | IAM users, IAM roles, or AWS accounts to allow inbound connections from. |
+| <code><a href="#@automatedna/cdk-rds-privatelink.RdsPrivateLinkProps.property.lambdaHandlerName">lambdaHandlerName</a></code> | <code>string</code> | Handler name for working with Lambda extensions that require a specific handler. Such as Sentry. |
 
 ---
 
@@ -941,6 +942,20 @@ public readonly allowedPrincipals: ArnPrincipal[];
 - *Default:* no connections allowed
 
 IAM users, IAM roles, or AWS accounts to allow inbound connections from.
+
+---
+
+##### `lambdaHandlerName`<sup>Optional</sup> <a name="lambdaHandlerName" id="@automatedna/cdk-rds-privatelink.RdsPrivateLinkProps.property.lambdaHandlerName"></a>
+
+```typescript
+public readonly lambdaHandlerName: string;
+```
+
+- *Type:* string
+
+Handler name for working with Lambda extensions that require a specific handler. Such as Sentry.
+
+Should only be used if you know exactly what you are doing.
 
 ---
 

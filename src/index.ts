@@ -89,6 +89,13 @@ export interface RdsPrivateLinkProps {
    * this topic.
    */
   readonly dbFailureTopic: sns.ITopic;
+  /**
+   * Handler name for working with Lambda extensions that
+   * require a specific handler. Such as Sentry.
+   *
+   * Should only be used if you know exactly what you are doing.
+   */
+  readonly lambdaHandlerName?: string;
 }
 
 export class RdsPrivateLink extends Construct {
@@ -176,7 +183,7 @@ export class RdsPrivateLink extends Construct {
 
     this.nlbManagementLambda = new lambda.Function(this, 'nlbUpdateLambda', {
       code: lambda.Code.fromAsset(path.join(__dirname, '../handler/src')),
-      handler: 'index.handler',
+      handler: props.lambdaHandlerName ?? 'index.handler',
       runtime: lambda.Runtime.PYTHON_3_9,
       role: this.nlbManagementLambdaRole,
     });
