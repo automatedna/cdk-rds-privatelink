@@ -23,6 +23,32 @@ export enum CommonDBPorts {
   POSTGRES = 5432,
 }
 
+export interface DbFailureTopicProps extends sns.TopicProps {
+  /**
+   * The RDS database to monitor for failure events.
+   */
+  readonly db: rds.IDatabaseInstance;
+}
+
+/**
+ * Creates an SNS topic subscribed to the RDS database for
+ * failure events.
+ */
+export class DbFailureTopic extends sns.Topic {
+  constructor(scope: Construct, id: string, props: DbFailureTopicProps) {
+    super(scope, id, { ...props });
+
+    props.db.onEvent('rdsPrivateLinkDatabaseFailureEvent', {
+      target: new targets.SnsTopic(this, {}),
+      eventPattern: {
+        detail: {
+          EventCategories: ['failover', 'failure'],
+        },
+      },
+    });
+  }
+}
+
 export interface RdsPrivateLinkProps {
   /**
    * The RDS database endpoint address to connect to.
@@ -55,6 +81,14 @@ export interface RdsPrivateLinkProps {
    * @default - no connections allowed
    */
   readonly allowedPrincipals?: iam.ArnPrincipal[];
+  /**
+   * The SNS topic used by the DB to notify
+   * of failure events.
+   *
+   * You can use the `DbFailureTopic` construct to create
+   * this topic.
+   */
+  readonly dbFailureTopic: sns.ITopic;
 }
 
 export class RdsPrivateLink extends Construct {
@@ -71,10 +105,6 @@ export class RdsPrivateLink extends Construct {
    * The Lambda function created to manage the NLB.
    */
   public readonly nlbManagementLambda: lambda.Function;
-  /**
-   * The SNS topic created to send notifications to.
-   */
-  public readonly nlbManagementTopic: sns.Topic;
   /**
    * The Lambda role created to manage the NLB.
    */
@@ -155,18 +185,7 @@ export class RdsPrivateLink extends Construct {
     this.nlbManagementLambda.addEnvironment('RDS_ENDPOINT', props.db.instanceEndpoint.hostname);
     this.nlbManagementLambda.addEnvironment('RDS_PORT', props.dbPort.toString());
 
-    this.nlbManagementTopic = new sns.Topic(this, 'RdsFailureTopic', {});
-
-    props.db.onEvent('rdsPrivateLinkDatabaseFailureEvent', {
-      target: new targets.SnsTopic(this.nlbManagementTopic, {}),
-      eventPattern: {
-        detail: {
-          EventCategories: ['failover', 'failure'],
-        },
-      },
-    });
-
-    this.nlbManagementTopic.addSubscription(new sns_subscriptions.LambdaSubscription(this.nlbManagementLambda));
+    props.dbFailureTopic.addSubscription(new sns_subscriptions.LambdaSubscription(this.nlbManagementLambda));
 
     this.vpcEndpointService = new ec2.VpcEndpointService(this, 'rdsPrivateLinkVpcEndpointService', {
       vpcEndpointServiceLoadBalancers: [this.nlb],

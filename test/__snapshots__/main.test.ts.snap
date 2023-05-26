@@ -222,6 +222,35 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       "Type": "AWS::RDS::DBInstance",
       "UpdateReplacePolicy": "Snapshot",
     },
+    "DBFailureTopicCD88C73F": {
+      "Type": "AWS::SNS::Topic",
+    },
+    "DBFailureTopicPolicy99993D30": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "events.amazonaws.com",
+              },
+              "Resource": {
+                "Ref": "DBFailureTopicCD88C73F",
+              },
+              "Sid": "0",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Topics": [
+          {
+            "Ref": "DBFailureTopicCD88C73F",
+          },
+        ],
+      },
+      "Type": "AWS::SNS::TopicPolicy",
+    },
     "DBSecretAttachment1CF7DE47": {
       "Properties": {
         "SecretId": {
@@ -330,7 +359,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
         "Targets": [
           {
             "Arn": {
-              "Ref": "STACKNAMERdsFailureTopic5488D4DF",
+              "Ref": "DBFailureTopicCD88C73F",
             },
             "Id": "Target0",
           },
@@ -338,48 +367,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       },
       "Type": "AWS::Events::Rule",
     },
-    "STACKNAMEPrivateLinkTagging167DAB2F": {
-      "DeletionPolicy": "Delete",
-      "DependsOn": [
-        "STACKNAMEPrivateLinkTaggingCustomResourcePolicyFE8E4317",
-      ],
-      "Properties": {
-        "Create": {
-          "Fn::Join": [
-            "",
-            [
-              "{"action":"createTags","parameters":{"Resources":["",
-              {
-                "Ref": "STACKNAMErdsPrivateLinkVpcEndpointServiceC5A8FCA0",
-              },
-              ""]},"service":"EC2","physicalResourceId":{"id":"rdsPrivateLinkTagging"}}",
-            ],
-          ],
-        },
-        "InstallLatestAwsSdk": true,
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
-            "Arn",
-          ],
-        },
-        "Update": {
-          "Fn::Join": [
-            "",
-            [
-              "{"action":"createTags","parameters":{"Resources":["",
-              {
-                "Ref": "STACKNAMErdsPrivateLinkVpcEndpointServiceC5A8FCA0",
-              },
-              ""]},"service":"EC2","physicalResourceId":{"id":"rdsPrivateLinkTagging"}}",
-            ],
-          ],
-        },
-      },
-      "Type": "Custom::AWS",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "STACKNAMEPrivateLinkTaggingCustomResourcePolicyFE8E4317": {
+    "PLPrivateLinkTaggingCustomResourcePolicyBB237DE5": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -400,7 +388,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
                     },
                     ":vpc-endpoint-service/",
                     {
-                      "Ref": "STACKNAMErdsPrivateLinkVpcEndpointServiceC5A8FCA0",
+                      "Ref": "PLrdsPrivateLinkVpcEndpointService57BEC4F1",
                     },
                   ],
                 ],
@@ -409,7 +397,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "STACKNAMEPrivateLinkTaggingCustomResourcePolicyFE8E4317",
+        "PolicyName": "PLPrivateLinkTaggingCustomResourcePolicyBB237DE5",
         "Roles": [
           {
             "Ref": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
@@ -418,36 +406,48 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "STACKNAMERdsFailureTopic5488D4DF": {
-      "Type": "AWS::SNS::Topic",
-    },
-    "STACKNAMERdsFailureTopicPolicy8CD785A3": {
+    "PLPrivateLinkTaggingF1D24EDD": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "PLPrivateLinkTaggingCustomResourcePolicyBB237DE5",
+      ],
       "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sns:Publish",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "events.amazonaws.com",
+        "Create": {
+          "Fn::Join": [
+            "",
+            [
+              "{"action":"createTags","parameters":{"Resources":["",
+              {
+                "Ref": "PLrdsPrivateLinkVpcEndpointService57BEC4F1",
               },
-              "Resource": {
-                "Ref": "STACKNAMERdsFailureTopic5488D4DF",
-              },
-              "Sid": "0",
-            },
+              ""]},"service":"EC2","physicalResourceId":{"id":"rdsPrivateLinkTagging"}}",
+            ],
           ],
-          "Version": "2012-10-17",
         },
-        "Topics": [
-          {
-            "Ref": "STACKNAMERdsFailureTopic5488D4DF",
-          },
-        ],
+        "InstallLatestAwsSdk": true,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
+            "Arn",
+          ],
+        },
+        "Update": {
+          "Fn::Join": [
+            "",
+            [
+              "{"action":"createTags","parameters":{"Resources":["",
+              {
+                "Ref": "PLrdsPrivateLinkVpcEndpointService57BEC4F1",
+              },
+              ""]},"service":"EC2","physicalResourceId":{"id":"rdsPrivateLinkTagging"}}",
+            ],
+          ],
+        },
       },
-      "Type": "AWS::SNS::TopicPolicy",
+      "Type": "Custom::AWS",
+      "UpdateReplacePolicy": "Delete",
     },
-    "STACKNAMEnlbManagementLambdaRoleF4F4A996": {
+    "PLnlbManagementLambdaRole923E58E9": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -475,15 +475,15 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
             ],
           },
           {
-            "Ref": "STACKNAMErdsPrivateLinkNlbManagementPolicy6F81C62D",
+            "Ref": "PLrdsPrivateLinkNlbManagementPolicy9057ABCF",
           },
         ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "STACKNAMEnlbUpdateLambda1862F3B8": {
+    "PLnlbUpdateLambda60872F76": {
       "DependsOn": [
-        "STACKNAMEnlbManagementLambdaRoleF4F4A996",
+        "PLnlbManagementLambdaRole923E58E9",
       ],
       "Properties": {
         "Code": {
@@ -502,14 +502,14 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
             },
             "RDS_PORT": "1433",
             "TARGET_GROUP_ARN": {
-              "Ref": "STACKNAMErdsPrivateLinkTargetGroupA9DCA360",
+              "Ref": "PLrdsPrivateLinkTargetGroup3ADAD4D6",
             },
           },
         },
         "Handler": "index.handler",
         "Role": {
           "Fn::GetAtt": [
-            "STACKNAMEnlbManagementLambdaRoleF4F4A996",
+            "PLnlbManagementLambdaRole923E58E9",
             "Arn",
           ],
         },
@@ -517,38 +517,38 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       },
       "Type": "AWS::Lambda::Function",
     },
-    "STACKNAMEnlbUpdateLambdaAllowInvokeTestStackSTACKNAMERdsFailureTopicBCC3EBE704D3C995": {
+    "PLnlbUpdateLambdaAllowInvokeTestStackDBFailureTopicECFBB40FD4D4C7F6": {
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Fn::GetAtt": [
-            "STACKNAMEnlbUpdateLambda1862F3B8",
+            "PLnlbUpdateLambda60872F76",
             "Arn",
           ],
         },
         "Principal": "sns.amazonaws.com",
         "SourceArn": {
-          "Ref": "STACKNAMERdsFailureTopic5488D4DF",
+          "Ref": "DBFailureTopicCD88C73F",
         },
       },
       "Type": "AWS::Lambda::Permission",
     },
-    "STACKNAMEnlbUpdateLambdaRdsFailureTopic38D4C39B": {
+    "PLnlbUpdateLambdaDBFailureTopicC15DB3C4": {
       "Properties": {
         "Endpoint": {
           "Fn::GetAtt": [
-            "STACKNAMEnlbUpdateLambda1862F3B8",
+            "PLnlbUpdateLambda60872F76",
             "Arn",
           ],
         },
         "Protocol": "lambda",
         "TopicArn": {
-          "Ref": "STACKNAMERdsFailureTopic5488D4DF",
+          "Ref": "DBFailureTopicCD88C73F",
         },
       },
       "Type": "AWS::SNS::Subscription",
     },
-    "STACKNAMErdsPrivateLinkNlbD5989511": {
+    "PLrdsPrivateLinkNlbB1039DEF": {
       "Properties": {
         "LoadBalancerAttributes": [
           {
@@ -573,7 +573,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       },
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
     },
-    "STACKNAMErdsPrivateLinkNlbManagementPolicy6F81C62D": {
+    "PLrdsPrivateLinkNlbManagementPolicy9057ABCF": {
       "Properties": {
         "Description": "Allows management of NLB for RDS private link setup",
         "Path": "/",
@@ -592,7 +592,7 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
               ],
               "Effect": "Allow",
               "Resource": {
-                "Ref": "STACKNAMErdsPrivateLinkTargetGroupA9DCA360",
+                "Ref": "PLrdsPrivateLinkTargetGroup3ADAD4D6",
               },
               "Sid": "TargetRegistration",
             },
@@ -602,25 +602,25 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       },
       "Type": "AWS::IAM::ManagedPolicy",
     },
-    "STACKNAMErdsPrivateLinkNlbrdsPrivateLinkNlbListenerD1C9FD4E": {
+    "PLrdsPrivateLinkNlbrdsPrivateLinkNlbListener366A3580": {
       "Properties": {
         "DefaultActions": [
           {
             "TargetGroupArn": {
-              "Ref": "STACKNAMErdsPrivateLinkTargetGroupA9DCA360",
+              "Ref": "PLrdsPrivateLinkTargetGroup3ADAD4D6",
             },
             "Type": "forward",
           },
         ],
         "LoadBalancerArn": {
-          "Ref": "STACKNAMErdsPrivateLinkNlbD5989511",
+          "Ref": "PLrdsPrivateLinkNlbB1039DEF",
         },
         "Port": 1433,
         "Protocol": "TCP",
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
     },
-    "STACKNAMErdsPrivateLinkTargetGroupA9DCA360": {
+    "PLrdsPrivateLinkTargetGroup3ADAD4D6": {
       "Properties": {
         "HealthCheckIntervalSeconds": 10,
         "HealthCheckPort": "1433",
@@ -642,12 +642,12 @@ exports[`Check CloudFormation template matches snapshot 1`] = `
       },
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
     },
-    "STACKNAMErdsPrivateLinkVpcEndpointServiceC5A8FCA0": {
+    "PLrdsPrivateLinkVpcEndpointService57BEC4F1": {
       "Properties": {
         "AcceptanceRequired": true,
         "NetworkLoadBalancerArns": [
           {
-            "Ref": "STACKNAMErdsPrivateLinkNlbD5989511",
+            "Ref": "PLrdsPrivateLinkNlbB1039DEF",
           },
         ],
       },

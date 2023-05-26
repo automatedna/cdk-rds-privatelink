@@ -26,6 +26,10 @@ const db = new rds.DatabaseInstance(stack, 'DB', {
   vpc,
 });
 
+const topic = new DbFailureTopic(stack, 'DBFailureTopic', {
+  db,
+});
+
 new rdsPrivateLink.RdsPrivateLink(stack, 'privateLink', {
   db,
   vpc,
@@ -33,5 +37,6 @@ new rdsPrivateLink.RdsPrivateLink(stack, 'privateLink', {
   vpcSubnets: {
     subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
   },
+  dbFailureTopic: topic,
 });
 ```

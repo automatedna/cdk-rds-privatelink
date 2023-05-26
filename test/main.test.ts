@@ -5,7 +5,7 @@ import {
   aws_ec2 as ec2,
 } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { RdsPrivateLink, CommonDBPorts } from '../src/index';
+import { RdsPrivateLink, CommonDBPorts, DbFailureTopic } from '../src/index';
 
 test('Check expected resources are created', () => {
   const app = new App();
@@ -18,14 +18,18 @@ test('Check expected resources are created', () => {
     vpc,
   });
 
-  new RdsPrivateLink(stack, 'STACK_NAME', {
+  const topic = new DbFailureTopic(stack, 'DBFailureTopic', {
+    db,
+  });
+
+  new RdsPrivateLink(stack, 'PL', {
     db,
     vpc,
     dbPort: CommonDBPorts.MSSQL,
     vpcSubnets: {
       subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
     },
-
+    dbFailureTopic: topic,
   });
 
   // Check resources
@@ -36,7 +40,6 @@ test('Check expected resources are created', () => {
 
   Template.fromStack(stack).hasResource('AWS::RDS::DBInstance', 1);
   Template.fromStack(stack).hasResource('AWS::Lambda::Function', 1);
-  Template.fromStack(stack).hasResource('AWS::SNS::Topic', 1);
   Template.fromStack(stack).hasResource('AWS::IAM::Role', 1);
   Template.fromStack(stack).hasResource('Custom::AWS', 1);
 });
@@ -52,14 +55,18 @@ test('Check CloudFormation template matches snapshot', () => {
     vpc,
   });
 
-  new RdsPrivateLink(stack, 'STACK_NAME', {
+  const topic = new DbFailureTopic(stack, 'DBFailureTopic', {
+    db,
+  });
+
+  new RdsPrivateLink(stack, 'PL', {
     db,
     vpc,
     dbPort: CommonDBPorts.MSSQL,
     vpcSubnets: {
       subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
     },
-
+    dbFailureTopic: topic,
   });
 
   const template = Template.fromStack(stack);
